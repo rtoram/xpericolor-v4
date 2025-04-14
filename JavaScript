@@ -1,0 +1,36 @@
+document.getElementById('undo').addEventListener('click', () => {
+    if (history[currentTab].length > 1) {
+        redoStack[currentTab].push(history[currentTab].pop());
+        const lastColors = history[currentTab][history[currentTab].length - 1];
+        const container = getContainerForTab(currentTab);
+        const variations = getVariationsForTab(currentTab);
+        renderPalette(lastColors, container, variations, currentTab);
+    } else {
+        alert('Nada para desfazer.');
+    }
+});
+
+document.getElementById('redo').addEventListener('click', () => {
+    if (redoStack[currentTab].length > 0) {
+        const colors = redoStack[currentTab].pop();
+        history[currentTab].push(colors);
+        const container = getContainerForTab(currentTab);
+        const variations = getVariationsForTab(currentTab);
+        renderPalette(colors, container, variations, currentTab);
+    } else {
+        alert('Nada para refazer.');
+    }
+});
+
+function getContainerForTab(tab) {
+    return tab === 'extract' ? colorPalette
+        : tab === 'wheel' ? harmonyPalette
+        : tab === 'table' ? colorTable
+        : svgPalette;
+}
+
+function getVariationsForTab(tab) {
+    return tab === 'extract' ? variationsDiv
+        : tab === 'table' ? tableVariations
+        : null;
+}
